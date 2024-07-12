@@ -18,20 +18,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-import Foundation
 
-extension Bundle {
-    static let testResources: Bundle = {
-        let bundle = Bundle(for: BundleFinder.self)
-        if let moduleName = bundle.bundleIdentifier,
-           let baseURL = bundle.resourceURL,
-           let testBundlePath = ProcessInfo.processInfo.environment["XCTestBundlePath"] {
-            if let resourceBundle = Bundle(path: baseURL.appending(path: "/\(moduleName)_\(moduleName).bundle").absoluteString) {
-                return resourceBundle
-            }
-        }
-        return Bundle.module
-    }()
+import XCTest
+import Fuzi
+import libxml2
 
-    private final class BundleFinder {}
+final class XmlOptionsTests: XCTestCase {
+
+    func testXmlParseOptionValues() {
+        XCTAssertEqual(XML_PARSE_NOWARNING.rawValue, XmlParseOptions.noWarning.rawValue)
+        XCTAssertEqual(XML_PARSE_NOERROR.rawValue, XmlParseOptions.noError.rawValue)
+        XCTAssertEqual(XML_PARSE_RECOVER.rawValue, XmlParseOptions.recover.rawValue)
+    }
+
+    func testXmlParseOptionSet() {
+        let defaultOptions = UInt32(XML_PARSE_NOWARNING.rawValue | XML_PARSE_NOERROR.rawValue | XML_PARSE_RECOVER.rawValue)
+        let options: XmlParseOptions = [.noWarning, .noError, .recover]
+        XCTAssertEqual(options.rawValue, defaultOptions)
+        XCTAssertEqual(XmlParseOptions.defaultOptions.rawValue, defaultOptions)
+    }
 }

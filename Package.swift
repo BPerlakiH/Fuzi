@@ -5,7 +5,6 @@ import PackageDescription
 
 let package = Package(
     name: "Fuzi",
-    platforms: [ .macOS(.v10_13) ],
     products: [
         .library(name: "Fuzi", targets: ["Fuzi"]),
     ],

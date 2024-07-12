@@ -1,4 +1,4 @@
-// XmlOptionsTests.swift
+// XmlParseOptions.swift
 // Copyright (c) 2024 BPerlakiH
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,20 +18,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 import Foundation
+import libxml2
 
-extension Bundle {
-    static let testResources: Bundle = {
-        let bundle = Bundle(for: BundleFinder.self)
-        if let moduleName = bundle.bundleIdentifier,
-           let baseURL = bundle.resourceURL,
-           let testBundlePath = ProcessInfo.processInfo.environment["XCTestBundlePath"] {
-            if let resourceBundle = Bundle(path: baseURL.appending(path: "/\(moduleName)_\(moduleName).bundle").absoluteString) {
-                return resourceBundle
-            }
-        }
-        return Bundle.module
-    }()
 
-    private final class BundleFinder {}
+public struct XmlParseOptions: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
+    public static let recover = XmlParseOptions(rawValue: 1 << 0)
+    public static let noError = XmlParseOptions(rawValue: 1 << 5)
+    public static let noWarning = XmlParseOptions(rawValue: 1 << 6)
+
+    public static let defaultOptions: XmlParseOptions = [.recover, .noError, .noWarning]
 }
